@@ -13,6 +13,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 . .\\venv\\Scripts\\Activate.ps1
 
 py -m pip install --upgrade pip
+pip install invoke
 
 '''
 
@@ -26,4 +27,5 @@ with open("temp_script.ps1", "w") as f:
 os.system("powershell -ExecutionPolicy Bypass -File temp_script.ps1")
 
 # Remove o script temporário (opcional)
+
 os.remove("temp_script.ps1")
