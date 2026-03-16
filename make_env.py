@@ -27,5 +27,4 @@ with open("temp_script.ps1", "w") as f:
 os.system("powershell -ExecutionPolicy Bypass -File temp_script.ps1")
 
 # Remove o script temporário (opcional)
-
 os.remove("temp_script.ps1")

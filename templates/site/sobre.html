@@ -1,0 +1,30 @@
+{% extends "site/base.html" %}   <!-- se você tiver um base.html, senão remova essa linha -->
+
+{% block title %}Sobre o Foods Delivery{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Sobre Nós</h1>
+        
+        <p>
+            O <strong>Foods Delivery</strong> é uma plataforma desenvolvida como projeto da disciplina 
+            de Programação WEB Avançada da UVV. Nosso objetivo é criar um sistema completo de 
+            delivery de alimentos, com cadastro de restaurantes, cardápios, pedidos e gerenciamento 
+            de entregas.
+        </p>
+
+        <h3 class="mt-5">Missão</h3>
+        <p>Facilitar o acesso rápido e confiável a refeições de qualidade, conectando clientes, 
+        restaurantes e entregadores de forma eficiente e moderna.</p>
+
+        <h3 class="mt-4">Equipe</h3>
+        <ul>
+            <li>Wanderson – Professor e orientador</li>
+            <li>Alunos da turma de Programação WEB Avançada 2025/1</li>
+        </ul>
+
+        <p class="mt-4">
+            <a href="{{ url_for('site.index') }}" class="btn btn-primary">Voltar para a página inicial</a>
+        </p>
+    </div>
+{% endblock %}
