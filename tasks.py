@@ -1,8 +1,33 @@
 from invoke import task
 from datetime import datetime
+from dotenv import load_dotenv
 import os
 import zipfile
 
+
+# ==========================================================
+# GERENCIAMENTO DE AMBIENTE
+# ==========================================================
+def load_env(env: str):
+    """
+    Carrega o arquivo .env correspondente ao ambiente.
+    Ex: dev, test, prod
+    """
+    env_file = f".env.{env}"
+
+    if not os.path.exists(env_file):
+        raise FileNotFoundError(f"Erro Critico: O arquivo de ambiente '{env_file}' nao foi encontrado.")
+
+    if os.path.exists(env_file):
+        load_dotenv(env_file, override=True)
+        print(f"[ENV] Ambiente '{env.upper()}' carregado com sucesso a partir de: {env_file}")
+    else:
+        raise FileNotFoundError(f"{env_file} nao encontrado")
+
+
+# ==========================================================
+# INSTALACAO
+# ==========================================================
 @task
 def install(c, dev=True):
     """
@@ -22,28 +47,56 @@ def uninstall(c):
     c.run("pip uninstall -y delivery", echo=True)
 
 
+# ==========================================================
+# EXECUCAO
+# ==========================================================
 @task
 def run(c):
     """
-    Executa a aplicacao Flask.
+    Executa a aplicacao Flask em ambiente de desenvolvimento.
     """
-    c.run("flask run", pty=True)
+
+    # carrega o .env.dev explicitamente
+    load_dotenv(".env.dev", override=True)
+
+    env = os.environ.copy()
+
+    c.run(
+        "flask --app delivery:create_app run --debug --reload",
+        env=env,
+        pty=False
+    )
+
+@task
+def prod(c):
+    """
+    Executa a aplicacao em modo producao.
+    """
+    load_env("prod")
+    c.run("flask run")
 
 
+# ==========================================================
+# TESTES
+# ==========================================================
 @task
 def test(c):
     """
     Executa os testes automatizados.
     """
-    c.run("pytest tests -v", pty=True)
+    load_env("test")
+    c.run("PYTHONPATH=. pytest -v")
 
 
+# ==========================================================
+# QUALIDADE DE CODIGO
+# ==========================================================
 @task
 def lint(c):
     """
     Verifica qualidade de codigo.
     """
-    c.run("flake8", pty=True)
+    c.run("flake8")
 
 
 @task
@@ -51,12 +104,23 @@ def format(c):
     """
     Formata o codigo automaticamente.
     """
-    c.run("black .", pty=True)
+    c.run("black .")
 
 
 @task
-def zip_windows(c, name=None):
+def seed_dev(c):
+    """
+    Executa o comando de seed garantindo o ambiente de desenvolvimento.
+    """
+    load_env("dev")
+    os.system("flask seed-dev")
 
+
+# ==========================================================
+# EMPACOTAMENTO
+# ==========================================================
+@task
+def zip(c, name=None):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
     zip_filename = name or f"delivery-projeto-{timestamp}.zip"
     zip_path = os.path.abspath(os.path.join("..", zip_filename))

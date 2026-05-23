@@ -15,11 +15,14 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Rodrigo B. de Magalhães", email = "rdgbaiao@gmail.com"}
+    {name = "Wanderson Santana", email = "wanderson.santana@uvv.br"}
 ]
 dependencies = [
     "Flask",
     "dotenv",
+    "flask-wtf",
+    "email-validator",
+    "flask-sqlalchemy",
 ]
 
 
@@ -31,6 +34,7 @@ company = "UVV Tecnologia"
 [project.optional-dependencies]
 dev = [
     "ipython",
+    "flask-shell-ipython",
     "black",
     "flake8",
     "flask-debugtoolbar >= 0.15",
@@ -42,6 +46,11 @@ test = [
     "pytest-cov >= 5.0",
     "pytest-flask",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+
 
 [tool.setuptools]
 include-package-data = true

@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ titulo | default("Meu Carrinho") }}{% endblock %}
+{% block css %}
+<!-- Aqui você insere no novo css. -->
+{% endblock %}
+
+{% block content %}
+    {% import 'main/macros.html' as macros %}
+    <div class="container py-6">
+
+    <h1 class="title is-2 has-text-centered nb-6">Meu Carrinho</h1>
+
+    {% if carrinho.itens %}
+    <ul class="is-flex is-flex-direction-column" style="list-style: none; padding:0; margin: 0">
+        {% for item in carrinho.itens %}
+            {{ macros.item_carrinho(item) }}
+        {% endfor %}
+    </ul>
+    
+    <div>
+        <strong>Total estimado: </strong>
+            <p class="title is-5 has-text-sucess has-text-weight-bold mb-0">
+                R$ {{ total | round(2) }}
+            </p>
+    </div>
+
+    {% else %}
+    <div class="notification is-danger has-text-centered py-6">
+            <p class="is-size-5">O carrinho esta vazio.</p> 
+            <p class="mt-2">Adicione itens para continuar!</p>
+    </div>
+    {% endif %}
+    </div>
+{% endblock %}
